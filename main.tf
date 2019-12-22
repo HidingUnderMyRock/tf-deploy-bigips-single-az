@@ -144,5 +144,5 @@ resource "aws_instance" "f5_bigip" {
     tags = {
         Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}"
     }
-    user_data                   = "${file("userdata.yaml")}"
+    user_data                   = "${file("cloud-init.yaml")}"
 }
