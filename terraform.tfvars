@@ -1,5 +1,3 @@
-# awsAccessKey          = "xxxxx"
-# awsSecretKey          = "xxxxx"
 awsVpcName              = "lipowsky-tf-vpc"
 awsSubnetSuffix         = "az1"
 awsNamePrefix           = "lipowsky-tf"
