@@ -95,6 +95,11 @@ resource "aws_network_interface" "external-enis" {
     tags = {
         Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}-eth1"
     }
+    
+    # Write address info to file upon instance creation
+    provisioner "local-exec" {
+        command = "echo External: ${self.private_ip} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
+    }
 }
 
 resource "aws_network_interface" "internal-enis" {
@@ -103,6 +108,11 @@ resource "aws_network_interface" "internal-enis" {
     security_groups             = data.aws_security_groups.awsVpcInternalSecurityGroup.ids
     tags = {
         Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}-eth2"
+    }
+    
+    # Write address info to file upon instance creation
+    provisioner "local-exec" {
+        command = "echo Internal: ${self.private_ip} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
     }
 }
 
@@ -148,13 +158,13 @@ resource "aws_instance" "f5_bigip" {
     
     # Write address info to file upon instance creation
     provisioner "local-exec" {
-        command = "echo Public: ${self.public_ip} > ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
+        command = "echo Mgmt-int: ${self.private_ip} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
     }
     provisioner "local-exec" {
-        command = "echo Private: ${self.private_ip} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
+        command = "echo Mgmt-ext: ${self.public_ip} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
     }
     provisioner "local-exec" {
-        command = "echo DNS: ${self.public_dns} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
+        command = "echo Public-DNS: ${self.public_dns} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
     }
     
     # Delete address info file upon instance destruction - Windows syntax
