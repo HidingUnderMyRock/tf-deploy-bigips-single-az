@@ -145,6 +145,8 @@ resource "aws_instance" "f5_bigip" {
         Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}"
     }
     user_data                   = file("cloud-init.yaml")
+    
+    # Write address info to file upon instance creation
     provisioner "local-exec" {
         command = "echo Public: ${self.public_ip} > ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
     }
@@ -153,5 +155,11 @@ resource "aws_instance" "f5_bigip" {
     }
     provisioner "local-exec" {
         command = "echo DNS: ${self.public_dns} >> ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
+    }
+    
+    # Delete address info file upon instance destruction - Windows syntax
+    provisioner "local-exec" {
+        when    = destroy
+        command = "del ${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}.info"
     }
 }
