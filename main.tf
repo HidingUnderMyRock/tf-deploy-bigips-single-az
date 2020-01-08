@@ -5,6 +5,7 @@ variable "awsSshKeyName" {}
 variable "awsRegion" {}
 variable "awsAmiId" {}
 variable "awsInstanceType" {}
+variable "awsSecondaryIpCount" {}
 
 terraform {
     required_version = ">= 0.12"
@@ -95,6 +96,7 @@ resource "aws_network_interface" "external-enis" {
     tags = {
         Name                    = "${var.awsNamePrefix}-bigip-${count.index+1}-${var.awsSubnetSuffix}-eth1"
     }
+    private_ips_count           = var.awsSecondaryIpCount
     
     # Write address info to file upon instance creation
     provisioner "local-exec" {
