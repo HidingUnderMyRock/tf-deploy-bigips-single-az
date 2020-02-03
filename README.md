@@ -1,8 +1,8 @@
-# tf-deploy-bigips-one-az
+# tf-deploy-bigips-single-az
 
 ## Description
 
-This Terraform module is used to deploy multiple F5 BIG-IPs in an AWS VPC, placing each BIG-IP into **one** availability zone and installing the declarative onboarding framework.
+This Terraform module is used to deploy multiple F5 BIG-IPs in an AWS VPC, placing each BIG-IP into a **single** availability zone and installing the declarative onboarding framework.
 
 ## Variables
 
